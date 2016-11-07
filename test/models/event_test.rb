@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id               :integer          not null, primary key
+#  starts_at        :datetime
+#  ends_at          :datetime
+#  kind             :string
+#  weekly_recurring :boolean
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'test_helper'
 
 class EventTest < ActiveSupport::TestCase
