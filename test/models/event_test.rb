@@ -2,19 +2,19 @@
 #
 # Table name: events
 #
-#  id               :integer          not null, primary key
-#  starts_at        :datetime
-#  ends_at          :datetime
-#  kind             :string
-#  weekly_recurring :boolean
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id             :integer          not null, primary key
+#  starts_at      :datetime         not null
+#  ends_at        :datetime         not null
+#  kind           :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  recurrence_day :integer
 #
 
 require 'test_helper'
 
 class EventTest < ActiveSupport::TestCase
-  
+    
   test "one simple test example" do
     
     Event.create kind: 'opening', starts_at: DateTime.parse("2014-08-04 09:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true
@@ -32,11 +32,11 @@ class EventTest < ActiveSupport::TestCase
   test "if one-time event present for selected day" do
     # S'il existe des horaires d'ouvertures ponctuels sur un jour,
     # on ne prend pas en compte les évènements récurrents précédents.
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-04 10:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true)
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-04 13:30"), ends_at: DateTime.parse("2014-08-04 15:00"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-04 10:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-04 13:30"), ends_at: DateTime.parse("2014-08-04 15:00"), weekly_recurring: true)
     
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-25 11:30"), ends_at: DateTime.parse("2014-08-25 12:30"))
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-25 14:00"), ends_at: DateTime.parse("2014-08-25 15:30"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-25 11:30"), ends_at: DateTime.parse("2014-08-25 12:30"))
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-25 14:00"), ends_at: DateTime.parse("2014-08-25 15:30"), weekly_recurring: true)
 
     availabilities = Event.availabilities( DateTime.parse("2014-08-11"))
     assert_equal ["10:30", "11:00", "11:30", "12:00", "13:30", "14:00", "14:30"], availabilities[0][:slots]
@@ -54,11 +54,11 @@ class EventTest < ActiveSupport::TestCase
     # Ainsi, les évènements récurrents ont un effet jusqu'à la date ultérieur du même jour de la semaine,
     # pour laquelle un nouvel évènement récurrent est mis en place.
     #
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-25 11:30"), ends_at: DateTime.parse("2014-08-25 12:30"), weekly_recurring: true)
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-25 14:00"), ends_at: DateTime.parse("2014-08-25 15:30"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-25 11:30"), ends_at: DateTime.parse("2014-08-25 12:30"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-25 14:00"), ends_at: DateTime.parse("2014-08-25 15:30"), weekly_recurring: true)
 
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-04 10:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true)
-    Event.create(kind: 'opening', starts_at: DateTime.parse("2014-08-04 13:30"), ends_at: DateTime.parse("2014-08-04 15:00"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-04 10:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true)
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-04 13:30"), ends_at: DateTime.parse("2014-08-04 15:00"), weekly_recurring: true)
     
     availabilities = Event.availabilities( DateTime.parse("2014-08-11"))
     assert_equal ["10:30", "11:00", "11:30", "12:00", "13:30", "14:00", "14:30"], availabilities[0][:slots]

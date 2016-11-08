@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161106095814) do
+ActiveRecord::Schema.define(version: 20161107215052) do
 
   create_table "events", force: :cascade do |t|
-    t.datetime "starts_at"
-    t.datetime "ends_at"
-    t.string   "kind"
-    t.boolean  "weekly_recurring"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "starts_at",      null: false
+    t.datetime "ends_at",        null: false
+    t.string   "kind",           null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "recurrence_day"
   end
 
 end
