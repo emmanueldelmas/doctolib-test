@@ -68,4 +68,11 @@ class EventTest < ActiveSupport::TestCase
     assert_equal ["11:30", "12:00", "14:00", "14:30", "15:00"], availabilities[0][:slots]
   end
   
+  test "can't create appointment out of opening slot" do
+    Event.create!(kind: 'opening', starts_at: DateTime.parse("2014-08-04 09:30"), ends_at: DateTime.parse("2014-08-04 12:30"), weekly_recurring: true)
+    Event.create!(kind: 'appointment', starts_at: DateTime.parse("2014-08-11 10:30"), ends_at: DateTime.parse("2014-08-11 11:30"))
+    assert_raise { Event.create!(kind: 'appointment', starts_at: DateTime.parse("2014-08-11 10:30"), ends_at: DateTime.parse("2014-08-11 11:30")) }
+    assert_raise { Event.create!(kind: 'appointment', starts_at: DateTime.parse("2014-08-25 13:30"), ends_at: DateTime.parse("2014-08-25 14:00")) }
+  end
+  
 end
