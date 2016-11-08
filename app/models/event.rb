@@ -30,6 +30,7 @@ class Event < ActiveRecord::Base
   validates_presence_of :starts_at, :ends_at, :kind
   validates_inclusion_of :kind, in: KIND
   validates_inclusion_of :recurrence_day, in: days.values, allow_nil: true
+  validate :validate_opening_slot, if: :appointment?
   
   scope :openings, -> { where(kind: OPENING) }
   scope :appointments, -> { where(kind: APPOINTMENT) }
@@ -53,13 +54,16 @@ class Event < ActiveRecord::Base
   
     # Get availabilities for given day
     def availabilities_for(date)
-      openings_slots = openings_on(date).collect(&:slots).flatten
-      appointments_slots = appointments_on(date).collect(&:slots).flatten
-    
       {
         date: date,
-        slots: openings_slots - appointments_slots
+        slots: available_slots_for(date)
       }
+    end
+    
+    def available_slots_for(date)
+      openings_slots = openings_on(date).collect(&:slots).flatten
+      appointments_slots = appointments_on(date).collect(&:slots).flatten
+      openings_slots - appointments_slots
     end
   
     # Get openings on given day
@@ -94,6 +98,15 @@ class Event < ActiveRecord::Base
     end
     
     @slots
+  end
+  
+  def appointment?
+    kind == APPOINTMENT
+  end
+  
+  def validate_opening_slot
+    not_opened_slots = slots - self.class.available_slots_for(starts_at)
+    errors[:base] << "Slots #{not_opened_slots.join(',')} are not open for appointment !" unless not_opened_slots.blank?
   end
   
   private
