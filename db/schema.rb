@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107215052) do
+ActiveRecord::Schema.define(version: 20161109111616) do
 
   create_table "events", force: :cascade do |t|
     t.datetime "starts_at",      null: false
@@ -21,5 +21,8 @@ ActiveRecord::Schema.define(version: 20161107215052) do
     t.datetime "updated_at",     null: false
     t.integer  "recurrence_day"
   end
+
+  add_index "events", ["recurrence_day", "starts_at"], name: "index_events_on_recurrence_day_and_starts_at"
+  add_index "events", ["starts_at", "kind"], name: "index_events_on_starts_at_and_kind"
 
 end
