@@ -113,7 +113,6 @@ class Event < ActiveRecord::Base
   
   def set_recurrence_day
     if weekly_recurring
-      self.weekly_recurring = nil
       self.recurrence_day = starts_at.wday
     end
   end
