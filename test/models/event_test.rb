@@ -2,13 +2,13 @@
 #
 # Table name: events
 #
-#  id             :integer          not null, primary key
-#  starts_at      :datetime         not null
-#  ends_at        :datetime         not null
-#  kind           :string           not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  recurrence_day :integer
+#  id               :integer          not null, primary key
+#  starts_at        :datetime         not null
+#  ends_at          :datetime         not null
+#  kind             :string           not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  weekly_recurring :boolean
 #
 
 require 'test_helper'
